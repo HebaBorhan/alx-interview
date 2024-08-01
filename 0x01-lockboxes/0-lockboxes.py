@@ -8,7 +8,7 @@ def canUnlockAll(boxes):
     opened_boxes = set()
     keys = set()
     queue = [0]
-    
+
     while queue:
         box_index = queue.pop()
         if box_index not in opened_boxes:
@@ -17,5 +17,5 @@ def canUnlockAll(boxes):
                 if key not in keys:
                     queue.append(key)
                 keys.add(key)
-    
+
     return len(opened_boxes) == n
