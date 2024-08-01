@@ -4,18 +4,21 @@
 
 def canUnlockAll(boxes):
     """Unlock boxes"""
+    if not boxes:
+        return False
+
     n = len(boxes)
-    opened_boxes = set()
-    keys = set()
-    queue = [0]
+    opened_boxes = set([0])
+    keys = set(boxes[0])
+    queue = list(boxes[0])
 
     while queue:
-        box_index = queue.pop()
-        if box_index not in opened_boxes:
-            opened_boxes.add(box_index)
-            for key in boxes[box_index]:
-                if key not in keys:
-                    queue.append(key)
-                keys.add(key)
+        key = queue.pop()
+        if key < n and key not in opened_boxes:
+            opened_boxes.add(key)
+            for new_key in boxes[key]:
+                if new_key not in keys:
+                    keys.add(new_key)
+                    queue.append(new_key)
 
     return len(opened_boxes) == n
