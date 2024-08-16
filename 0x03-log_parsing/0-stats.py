@@ -38,7 +38,13 @@ def handle_interrupt(signal, frame):
 signal.signal(signal.SIGINT, handle_interrupt)
 
 pattern = re.compile(
-    r'^(\d+\.\d+\.\d+\.\d+) - \[([^\]]+)\] "GET /projects/260 HTTP/1.1" (\d{3}) (\d+)$'
+    r'^'
+    r'(\d+\.\d+\.\d+\.\d+)'
+    r' - '
+    r'\[([^\]]+)\]'
+    r' "GET /projects/260 HTTP/1.1"'
+    r' (\d{3})'
+    r' (\d+)$'
 )
 
 try:
