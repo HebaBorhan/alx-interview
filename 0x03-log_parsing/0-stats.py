@@ -77,3 +77,7 @@ except KeyboardInterrupt:
 # Print stats one last time if there are remaining lines
 if line_count % 10 != 0:
     print_stats()
+
+# Print stats if no lines were read
+if line_count == 0:
+    print("File size: 0")
