@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Script that reads stdin line by line and computes metrics"""
+import re
 import sys
 import signal
 
@@ -36,32 +37,37 @@ def handle_interrupt(signal, frame):
 # Signal handler for CTRL + C
 signal.signal(signal.SIGINT, handle_interrupt)
 
+pattern = re.compile(
+    r'^(\d+\.\d+\.\d+\.\d+) - \[([^\]]+)\] "GET /projects/260 HTTP/1.1" (\d{3}) (\d+)$'
+)
+
 try:
     for line in sys.stdin:
-        parts = line.split()
-        if len(parts) < 9:
-            continue
+        match = pattern.match(line)
+        if match:
+            # Extracting status code and file size
+            status_code = match.group(3)
+            file_size = match.group(4)
 
-        # Extracting file size & status code
-        file_size = parts[-1]
-        status_code = parts[-2]
+            # Check if file_size is a number
+            if file_size.isdigit():
+                total_size += int(file_size)
 
-        # Checking if file_size is number
-        if not file_size.isdigit():
-            continue
-        total_size += int(file_size)
+                # Increment the count for the status code
+                if status_code in status_codes:
+                    status_codes[status_code] += 1
 
-        # Increment status code count
-        if status_code in status_codes:
-            status_codes[status_code] += 1
+                line_count += 1
 
-        line_count += 1
-
-        # Printing stats every 10 lines
-        if line_count % 10 == 0:
-            print_stats()
+                # Print statistics every 10 lines
+                if line_count % 10 == 0:
+                    print_stats()
 
 except KeyboardInterrupt:
-    # Printing stats on keyboard interruption
+    # Handle keyboard interruption
     print_stats()
     sys.exit(0)
+
+# Print stats one last time if there are remaining lines
+if line_count % 10 != 0:
+    print_stats()
