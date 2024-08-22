@@ -8,11 +8,11 @@ def validUTF8(data):
 
     for num in data:
         # Binary representation of number as string of bits
-        bin_rep = format(num, '#010b')[-8:]
+        binary_rep = format(num, '#010b')[-8:]
 
         if n_bytes == 0:
-            # Count number of leading 1's in first byte
-            for bit in bin_rep:
+            # Count number of leading 1 in first byte
+            for bit in binary_rep:
                 if bit == '0':
                     break
                 n_bytes += 1
@@ -26,12 +26,12 @@ def validUTF8(data):
                 return False
 
         else:
-            # If the byte doesn't start with '10', then it's invalid
-            if not (bin_rep[0] == '1' and bin_rep[1] == '0'):
+            # If the byte doesn't start with 10, then it's invalid
+            if not (binary_rep[0] == '1' and binary_rep[1] == '0'):
                 return False
 
-        # We processed one byte in this character's multi-byte sequence
+        # One byte in this character's multi-byte sequence
         n_bytes -= 1
 
-    # If we finished and n_bytes is not 0, it's invalid
+    # If n_bytes is not 0, it's invalid
     return n_bytes == 0
