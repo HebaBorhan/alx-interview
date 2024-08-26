@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Determines all possible solutions to the N Queens problem, where N queens
+Determines all possible solutions to N Queens problem, where N queens
 are placed on an N×N chessboard such that no two queens threaten each other.
 """
 
