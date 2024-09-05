@@ -9,10 +9,9 @@ if (process.argv.length !== 3) {
 }
 
 const movieId = process.argv[2];
-
-// Make a request to the Star Wars API for the specific movie
 const apiUrl = `https://swapi.dev/api/films/${movieId}/`;
 
+// Make a request to get the film details
 request(apiUrl, (error, response, body) => {
   if (error) {
     console.error('Error:', error);
@@ -20,26 +19,33 @@ request(apiUrl, (error, response, body) => {
   }
 
   if (response.statusCode === 200) {
-    // Parse the response body into a JSON object
+    // Parse the movie details
     const filmData = JSON.parse(body);
 
-    // Extract the list of character URLs from the "characters" field
+    // Extract the character URLs
     const characters = filmData.characters;
 
-    // Fetch the name of each character
-    characters.forEach((characterUrl) => {
-      request(characterUrl, (err, res, characterBody) => {
-        if (err) {
-          console.error('Error:', err);
-          return;
-        }
-
-        if (res.statusCode === 200) {
-          const characterData = JSON.parse(characterBody);
-          console.log(characterData.name);
-        }
+    // Create an array of promises to fetch each character's name
+    const promises = characters.map((characterUrl) => {
+      return new Promise((resolve, reject) => {
+        request(characterUrl, (err, res, characterBody) => {
+          if (err) reject(err);
+          if (res.statusCode === 200) {
+            const characterData = JSON.parse(characterBody);
+            resolve(characterData.name); // Resolve the character name
+          } else {
+            reject(`Failed to retrieve character at ${characterUrl}`);
+          }
+        });
       });
     });
+
+    // Wait for all character requests to complete and print them in order
+    Promise.all(promises)
+      .then((characterNames) => {
+        characterNames.forEach((name) => console.log(name));
+      })
+      .catch((err) => console.error(err));
   } else {
     console.error(`Failed to retrieve movie. Status code: ${response.statusCode}`);
   }
