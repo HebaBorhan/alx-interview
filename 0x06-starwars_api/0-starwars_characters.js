@@ -29,12 +29,13 @@ request(apiUrl, (error, response, body) => {
     const promises = characters.map((characterUrl) => {
       return new Promise((resolve, reject) => {
         request(characterUrl, (err, res, characterBody) => {
-          if (err) reject(err);
-          if (res.statusCode === 200) {
+          if (err) {
+            reject(new Error(err)); // Ensure rejection reason is an Error
+          } else if (res.statusCode === 200) {
             const characterData = JSON.parse(characterBody);
             resolve(characterData.name); // Resolve the character name
           } else {
-            reject(`Failed to retrieve character at ${characterUrl}`);
+            reject(new Error(`Failed to retrieve character at ${characterUrl}`)); // Ensure rejection reason is an Error
           }
         });
       });
@@ -45,7 +46,7 @@ request(apiUrl, (error, response, body) => {
       .then((characterNames) => {
         characterNames.forEach((name) => console.log(name));
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error('Error:', err.message)); // Log error message
   } else {
     console.error(`Failed to retrieve movie. Status code: ${response.statusCode}`);
   }
