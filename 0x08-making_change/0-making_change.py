@@ -14,6 +14,8 @@ def makeChange(coins, total):
 
     # Fill dp array
     for coin in coins:
+        if coin > total:
+            continue
         for x in range(coin, total + 1):
             dp[x] = min(dp[x], dp[x - coin] + 1)
 
