@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 """island perimeter"""
 
+
 def island_perimeter(grid):
-    """eturns the perimeter of the island described in grid"""
+    """Returns the perimeter of the island described in grid"""
     # Grid dimensions
     rows = len(grid)
     cols = len(grid[0])
@@ -13,22 +14,21 @@ def island_perimeter(grid):
     for r in range(rows):
         for c in range(cols):
             if grid[r][c] == 1:
-                # Start with 4 for each land cell
                 perimeter += 4
 
-                # Check if there is land above
+                # if there is land above
                 if r > 0 and grid[r-1][c] == 1:
                     perimeter -= 1
 
-                # Check if there is land below
+                # if there is land below
                 if r < rows - 1 and grid[r+1][c] == 1:
                     perimeter -= 1
 
-                # Check if there is land to the left
+                # if there is land to left
                 if c > 0 and grid[r][c-1] == 1:
                     perimeter -= 1
 
-                # Check if there is land to the right
+                # if there is land to right
                 if c < cols - 1 and grid[r][c+1] == 1:
                     perimeter -= 1
 
